@@ -1,4 +1,8 @@
 #include "CAScene.h"
+#include "Random.h"
+
+const color_t white = color_t{ 255,255,255,255 };
+const color_t black = color_t{ 0,0,0,255 };
 
 bool CAScene::Initialize()
 {
@@ -10,7 +14,7 @@ bool CAScene::Initialize()
 
 	m_framebuffer = std::make_unique<Framebuffer>(m_renderer, m_renderer.m_width / 2, m_renderer.m_height /2);
 
-	m_cells = std::make_unique<Cells<bool>>(m_renderer.m_width / 2, m_renderer.m_height/ 2);
+	m_cells = std::make_unique<Cells<uint8_t>>(m_framebuffer->m_width, m_framebuffer->m_height);
 
 	return true;
 }
@@ -35,7 +39,7 @@ void CAScene::Update()
 			i |= m_cells->Read(x - 1, y) << 2;
 			i |= m_cells->Read(x + 1, y);
 
-			uint8_t state = (rule & 1 << i);
+			uint8_t state = (rule & 1 << i) ? 1 : 0;
 			m_cells->Write(x, y + 1, state);
 		}
 	}
@@ -43,7 +47,7 @@ void CAScene::Update()
 	for (int i = 0; i < m_cells->m_data.size(); i++)
 	{
 
-		m_framebuffer->m_buffer[i] = (m_cells->m_data[i]) ? color_t{ 255,255,255,255 } : color_t{ 0,0,0,255 };
+		m_framebuffer->m_buffer[i] = (m_cells->m_data[i]) ? white : black;
 		
 	}
 	//write cells to the framebuffer
