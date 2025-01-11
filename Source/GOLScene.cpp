@@ -37,7 +37,7 @@ void GOLScene::Update()
 	{
  		for (int i = 0; i < nextCells->m_data.size(); i++)
 		{
-			nextCells->m_data[i] = (random(40) == 0) ? 1 : 0;
+			nextCells->m_data[i] = (random(40) % 2 == 0) ? 1 : 0;
 		}
 	}
 
